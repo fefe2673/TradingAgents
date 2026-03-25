@@ -8,6 +8,7 @@ from tradingagents.agents.utils.agent_utils import (
     get_fundamentals,
     get_income_statement,
     get_insider_transactions,
+    trim_messages_for_context,
 )
 from tradingagents.dataflows.config import get_config
 
@@ -54,7 +55,7 @@ def create_fundamentals_analyst(llm):
 
         chain = prompt | llm.bind_tools(tools)
 
-        result = chain.invoke(state["messages"])
+        result = chain.invoke(trim_messages_for_context(state["messages"]))
 
         report = ""
 

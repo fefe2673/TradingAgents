@@ -5,6 +5,7 @@ from tradingagents.agents.utils.agent_utils import (
     build_instrument_context,
     get_indicators,
     get_stock_data,
+    trim_messages_for_context,
 )
 from tradingagents.dataflows.config import get_config
 
@@ -73,7 +74,7 @@ Volume-Based Indicators:
 
         chain = prompt | llm.bind_tools(tools)
 
-        result = chain.invoke(state["messages"])
+        result = chain.invoke(trim_messages_for_context(state["messages"]))
 
         report = ""
 

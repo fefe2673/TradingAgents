@@ -5,6 +5,7 @@ from tradingagents.agents.utils.agent_utils import (
     build_instrument_context,
     get_global_news,
     get_news,
+    trim_messages_for_context,
 )
 from tradingagents.dataflows.config import get_config
 
@@ -47,7 +48,7 @@ def create_news_analyst(llm):
         prompt = prompt.partial(instrument_context=instrument_context)
 
         chain = prompt | llm.bind_tools(tools)
-        result = chain.invoke(state["messages"])
+        result = chain.invoke(trim_messages_for_context(state["messages"]))
 
         report = ""
 

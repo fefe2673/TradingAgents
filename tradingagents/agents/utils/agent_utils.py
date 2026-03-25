@@ -28,6 +28,13 @@ def build_instrument_context(ticker: str) -> str:
         "preserving any exchange suffix (e.g. `.TO`, `.L`, `.HK`, `.T`)."
     )
 
+def trim_messages_for_context(messages, max_messages: int = 6):
+    """Keep the first message and the most recent max_messages to avoid context overflow."""
+    if len(messages) <= max_messages + 1:
+        return messages
+    return [messages[0]] + messages[-max_messages:]
+
+
 def create_msg_delete():
     def delete_messages(state):
         """Clear messages and add placeholder for Anthropic compatibility"""

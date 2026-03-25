@@ -1,6 +1,9 @@
 from langchain_core.tools import tool
 from typing import Annotated
+from datetime import datetime, timedelta
 from tradingagents.dataflows.interface import route_to_vendor
+
+_MAX_STOCK_DATA_DAYS = 30
 
 
 @tool
@@ -19,4 +22,12 @@ def get_stock_data(
     Returns:
         str: A formatted dataframe containing the stock price data for the specified ticker symbol in the specified date range.
     """
+    try:
+        end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+        start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+        min_start = end_dt - timedelta(days=_MAX_STOCK_DATA_DAYS)
+        if start_dt < min_start:
+            start_date = min_start.strftime("%Y-%m-%d")
+    except ValueError:
+        pass
     return route_to_vendor("get_stock_data", symbol, start_date, end_date)
